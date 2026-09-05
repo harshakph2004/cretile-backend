@@ -1,0 +1,7 @@
+node_modules/
+.expo/
+.env
+server/kits.json
+server/service-account.json
+server/oauth-client.json
+server/vision-key.json

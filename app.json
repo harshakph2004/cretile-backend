@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Cretile",
+    "slug": "cretile",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "cretile",
+    "userInterfaceStyle": "light",
+    "plugins": [
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Allow Cretile to attach kit photos.",
+          "cameraPermission": "Allow Cretile to photograph kits."
+        }
+      ],
+      "expo-router",
+      "expo-font"
+    ],
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "772c4b5a-d417-40f6-b678-de3650aa2925"
+      }
+    },
+    "android": {
+      "package": "com.harshakph.cretile"
+    }
+  }
+}
