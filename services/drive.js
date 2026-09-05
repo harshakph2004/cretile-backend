@@ -6,7 +6,7 @@
  * or service account and returns the folder/file IDs to the app.
  */
 
-const API_URL = "http://192.168.0.10:3000";
+const API_URL = "https://cretile-backend.onrender.com";
 
 export function driveImageUrl(fileId) {
   return `${API_URL}/files/${fileId}/content`;

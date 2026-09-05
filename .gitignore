@@ -1,6 +1,7 @@
 node_modules/
 .expo/
 .env
+.DS_Store
 server/kits.json
 server/service-account.json
 server/oauth-client.json
