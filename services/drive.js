@@ -21,7 +21,31 @@ export async function uploadKit({ kitName, client, serialNumber, images }) {
   payload.append('serialNumber', serialNumber);
   appendImages(payload, images);
 
-  const response = await fetch(`${API_URL}/kits`, { method: 'POST', body: payload });
+console.log("=== UPLOAD START ===");
+console.log("API:", API_URL);
+console.log("Images:", images);
+
+try {
+  const response = await fetch(`${API_URL}/kits`, {
+    method: "POST",
+    body: payload,
+  });
+
+  console.log("Status:", response.status);
+
+  const text = await response.text();
+  console.log("Response:", text);
+
+  if (!response.ok) {
+    throw new Error(text);
+  }
+
+  return JSON.parse(text);
+
+} catch (err) {
+  console.log("FETCH ERROR:", err);
+  throw err;
+}
   if (!response.ok) throw new Error('The images could not be uploaded to Google Drive.');
   return response.json();
 }
@@ -41,6 +65,8 @@ export async function updateKit(id, { kitName, client, serialNumber, images }) {
 function appendImages(payload, images) {
   images.forEach((image, index) => {
     const asset = typeof image === 'string' ? { uri: image } : image;
+    console.log(asset);
+console.log(asset.uri);
     payload.append('images', {
       uri: asset.uri,
       name: asset.fileName || `photo-${index + 1}.jpg`,

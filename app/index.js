@@ -45,7 +45,7 @@ const [highlightImageId, setHighlightImageId] = useState(null);
   }, []);
 
   const loadDriveKits = async () => {
-    if (!process.env.EXPO_PUBLIC_API_URL) return;
+    setRefreshing(true);
     setRefreshing(true);
     try {
       setKits(await searchKits(''));
@@ -117,9 +117,11 @@ const [highlightImageId, setHighlightImageId] = useState(null);
     try {
       // With EXPO_PUBLIC_API_URL set, this calls the backend and uploads to Drive.
       // Without it, the local record makes the UI easy to demo in Expo Go.
-      const remoteKit = process.env.EXPO_PUBLIC_API_URL
-        ? (editingKit ? await updateKit(editingKit.id, form) : await uploadKit(form))
-        : null;
+     console.log("Save button pressed");
+console.log(form);
+      const remoteKit = editingKit
+  ? await updateKit(editingKit.id, form)
+  : await uploadKit(form);
       const localKit = editingKit
         ? { ...editingKit, ...form, images: [...editingKit.images, ...form.images], updatedAt: new Date().toISOString() }
         : { id: Date.now().toString(), ...form, createdAt: new Date().toISOString() };
