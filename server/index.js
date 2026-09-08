@@ -201,7 +201,7 @@ app.use((error, req, res, next) => {
     error: error.message,
     stack: error.stack,
   });
-});N
+});
 
 app.listen(PORT, () => console.log(`Cretile API listening on port ${PORT}`));
 
