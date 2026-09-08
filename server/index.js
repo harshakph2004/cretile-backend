@@ -94,7 +94,7 @@ app.get('/kits', async (req, res, next) => {
 
 app.post('/kits', upload.array('images', 20), async (req, res, next) => {
   try {
-    const { kitName, client } = req.body;
+    const { kitName, client, serialNumber } = req.body;
 
 if (!kitName || !client) {
   return res.status(400).json({
@@ -104,14 +104,25 @@ if (!kitName || !client) {
 
 
     // Upload all images
+    // Create client folder in Google Drive
+const folder = await drive.files.create({
+  requestBody: {
+    name: folderName(client),
+    mimeType: "application/vnd.google-apps.folder",
+    parents: [PARENT_FOLDER_ID],
+  },
+  fields: "id, webViewLink",
+});
     const images = await uploadImages(req.files, folder.data.id);
+    const detectedSerial =
+  images.length > 0 ? images[0].detectedSerial : "UNKNOWN";
 
     // Save metadata
     const record = {
       id: folder.data.id,
       kitName: kitName.trim(),
       client: client.trim(),
-      serialNumber: serialNumber.trim(),
+      serialNumber: detectedSerial,
       images,
       driveFolderId: folder.data.id,
       driveFolderUrl:
@@ -133,7 +144,7 @@ if (!kitName || !client) {
 
 app.patch('/kits/:id', upload.array('images', 20), async (req, res, next) => {
   try {
-    const { kitName, client } = req.body;
+    const { kitName, client, serialNumber } = req.body;
     if (![kitName, client, serialNumber].every((value) => value && value.trim())) {
       return res.status(400).json({ error: 'kitName, client, and serialNumber are required.' });
     }
@@ -184,9 +195,13 @@ app.delete('/kits/:id', async (req, res, next) => {
 });
 
 app.use((error, req, res, next) => {
-  console.error(error);
-  res.status(500).json({ error: 'Upload failed. Check the server and Google Drive configuration.' });
-});
+  console.error("ERROR:", error);
+
+  res.status(500).json({
+    error: error.message,
+    stack: error.stack,
+  });
+});N
 
 app.listen(PORT, () => console.log(`Cretile API listening on port ${PORT}`));
 
